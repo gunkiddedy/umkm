@@ -26,26 +26,29 @@
                     <!-- dttb-->
                     <div>
                         <vue-good-table
-                            mode="remote"
+                            mode="pages"
                             @on-page-change="onPageChange"
                             @on-sort-change="onSortChange"
                             @on-column-filter="onColumnFilter"
                             @on-per-page-change="onPerPageChange"
-                            @on-search="onSearch"
+                            paginate="true"
+                            :lineNumbers="true"
                             :totalRows="totalRecords"
                             :isLoading.sync="isLoading"
                             :pagination-options="{
                                 enabled: true,
+                                nextLabel: 'maju',
+                                prevLabel: 'mundur',
+                                setCurrentPage: 1,
+                                perPage: 15,
+                                perPageDropdown: [15, 30, 45, 60],
+                                dropdownAllowAll: true,
+                                rowsPerPageLabel: 'per halaman',
+                                allLabel: 'Semua',
+                                ofLabel: 'dari',
                             }"
                             :rows="rows"
                             :columns="columns"
-                            :globalSearch="true"
-                            :search-options="{
-                                enabled: true,
-                                skipDiacritics: true,
-                                trigger: 'enter',
-                                placeholder: 'Cari data...',
-                            }"
                         />
 
                     </div>
@@ -79,74 +82,234 @@ export default {
 
             isLoading: false,
             columns: [
-                {label: 'Id',field: 'id',width: '20px', sortable: true},
                 {
                     label: 'Nama Usaha',
                     field: 'nama_usaha', 
-                    sortable: true, 
                     width: '200px',
+                    filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        // filterValue: "",
+                        // filterDropdownItems: [],
+                        // filterFn: function(data, filterString) {
+                        //     return data === filterString;
+                        // },
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },
                 },
                 {
                     label: 'kelembagaan', 
                     field: 'kelembagaan', 
-                    sortable: true, 
                     width: '250px',
                     filterOptions: {
                         enabled: true, // enable filter for this column
-                        placeholder: 'Filter Kelembagaan', // placeholder for filter input
-                        //filterValue: 'Jane', // initial populated value for this filter
+                        placeholder: 'Filter', // placeholder for filter input
+                        // filterValue: "",
                         filterDropdownItems: [
                             'PT', 'CV', 'Koperasi', 
                             'FA', 'UD', 'P. Perseorangan Lainnya', 
-                            'Non Badan Hukum'], // dropdown (with selected values) instead of text input
-                        //filterFn: this.columnFilterFn, //custom filter function that
-                        trigger: 'enter', //only trigger on enter not on keyup 
+                            'Non Badan Hukum'
+                        ],
+                        // filterFn: function(data, filterString) {
+                        //     return data === filterString;
+                        // },
+                        trigger: 'keyup',
                     },
                 },
-                {label: 'nama_pemilik',field: 'nama_pemilik', sortable: true, width: '200px'},
-                {label: 'nik',field: 'nik', sortable: true, width: 'auto'},
-                {label: 'L/P',field: 'jenis_kelamin', width: '50px', sortable: true},
-                {label: 'siu',field: 'siu', sortable: true, width: 'auto'},
-                {label: 'npwp',field: 'npwp', sortable: true, width: 'auto'},
-                {label: 'tmu',field: 'tmu', sortable: true, width: 'auto'},
-                {label: 'alamat',field: 'alamat', sortable: true, width: '200px'},
-                {label: 'desa',field: 'desa', sortable: true, width: '150px'},
-                {label: 'tlp',field: 'tlp', sortable: true, width: 'auto'},
-                {label: 'email',field: 'email', sortable: true, width: 'auto'},
-                {label: 'up1',field: 'up1', sortable: true, width: 'auto'},
-                {label: 'up2',field: 'up2', sortable: true, width: 'auto'},
-                {label: 'up3',field: 'up3', sortable: true, width: 'auto'},
-                {label: 'up4',field: 'up4', sortable: true, width: 'auto'},
-                {label: 'up5',field: 'up5', sortable: true, width: 'auto'},
-                {label: 'bahan_baku',field: 'bahan_baku', sortable: true, width: '200px'},
-                {label: 'tk1_l',field: 'tk1_l', sortable: true, width: 'auto'},
-                {label: 'tk1_p',field: 'tk1_p', sortable: true, width: 'auto'},
-                {label: 'tk2_l',field: 'tk2_l', sortable: true, width: 'auto'},
-                {label: 'tk2_p',field: 'tk2_p', sortable: true, width: 'auto'},
-                {label: 'kp1',field: 'kp1', sortable: true, width: 'auto'},
-                {label: 'kp2',field: 'kp2', sortable: true, width: 'auto'},
-                {label: 'omset1',field: 'omset1', sortable: true, width: '150px'},
-                {label: 'omset2',field: 'omset2', sortable: true, width: '150px'},
-                {label: 'ms1',field: 'ms1', sortable: true, width: 'auto'},
-                {label: 'ms2',field: 'ms2', sortable: true, width: 'auto'},
-                {label: 'bp1',field: 'bp1', sortable: true, width: 'auto'},
-                {label: 'bp2',field: 'bp2', sortable: true, width: 'auto'},
-                {label: 'pk1',field: 'pk1', sortable: true, width: 'auto'},
-                {label: 'pk2',field: 'pk2', sortable: true, width: 'auto'},
-                {label: 'pp1',field: 'pp1', sortable: true, width: 'auto'},
-                {label: 'pp2',field: 'pp2', sortable: true, width: 'auto'},
-                {label: 'pb1',field: 'pb1', sortable: true, width: 'auto'},
-                {label: 'pb2',field: 'pb2', sortable: true, width: 'auto'},
-                {label: 'kriteria',field: 'kriteria', sortable: true, width: '200px'},
-                {label: 'tahun',field: 'tahun', sortable: true, width: 'auto'},
+                {label: 'nama_pemilik',field: 'nama_pemilik', sortable: true, width: '200px',filterable: true,
+                    filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },
+                },
+                {label: 'nik',field: 'nik', sortable: true, width: 'auto', filterable: true,filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'L/P',field: 'jenis_kelamin', width: '50px', sortable: true, filterable: true,filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'siu',field: 'siu', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'npwp',field: 'npwp', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'tmu',field: 'tmu', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'alamat',field: 'alamat', sortable: true, width: '200px', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'desa',field: 'desa', sortable: true, width: '150px', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'tlp',field: 'tlp', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'email',field: 'email', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'up1',field: 'up1', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'up2',field: 'up2', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'up3',field: 'up3', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'up4',field: 'up4', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'up5',field: 'up5', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'bahan_baku',field: 'bahan_baku', sortable: true, width: '200px', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'tk1_l',field: 'tk1_l', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'tk1_p',field: 'tk1_p', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'tk2_l',field: 'tk2_l', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'tk2_p',field: 'tk2_p', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'kp1',field: 'kp1', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'kp2',field: 'kp2', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'omset1',field: 'omset1', sortable: true, width: '150px', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'omset2',field: 'omset2', sortable: true, width: '150px', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'ms1',field: 'ms1', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'ms2',field: 'ms2', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'bp1',field: 'bp1', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'bp2',field: 'bp2', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'pk1',field: 'pk1', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'pk2',field: 'pk2', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'pp1',field: 'pp1', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'pp2',field: 'pp2', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'pb1',field: 'pb1', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'pb2',field: 'pb2', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'kriteria',field: 'kriteria', sortable: true, width: '200px', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
+                {label: 'tahun',field: 'tahun', sortable: true, width: 'auto', filterable: true, filterOptions: {
+                        enabled: true, // enable filter for this column
+                        placeholder: 'Filter', // placeholder for filter input
+                        trigger: 'enter', //only trigger on enter not on keyup
+                    },},
             ],
             rows: [],
             totalRecords: 0,
-            ukmDesa: {
-                searchTerm: '',
-                page: 1, 
-                per_page: 15
-            }
+            serverParams: {
+                columnFilters: {},
+                sort: {
+                    field: '', 
+                    type: '',
+                },
+                page: 1,
+                perPage: 15,
+            },
         }
     },
 
@@ -158,14 +321,8 @@ export default {
 
     methods: {
 
-        onSearch: _.debounce(function (params) {
-            this.updateParams(params);
-            this.getRecords();
-            return false;
-        }, 500),
-
         updateParams(newProps) {
-            this.ukmDesa = Object.assign({}, this.ukmDesa, newProps);
+            this.serverParams = Object.assign({}, this.serverParams, newProps);
         },
         
         onPageChange(params) {
@@ -181,44 +338,33 @@ export default {
         onSortChange(params) {
             this.updateParams({
                 sort: [{
-                    type: params.sortType,
-                    field: this.columns.field,
+                type: params.sortType,
+                field: this.columns[params.columnIndex].field,
                 }],
             });
             this.getRecords();
         },
         // this.columns[params.columnIndex]
         onColumnFilter(params) {
-            this.updateParams(params);
+            // this.updateParams(params);
+            this.$set(this.columns[foundIndex].filterOptions, 'filterValue', value);
             this.getRecords();
         },
-
         // load items is what brings back the rows from server
         getRecords() {
-            axios.get('/api/ukms/'+this.desa_id+'?page='+this.ukmDesa.page+'&searchTerm='+this.ukmDesa.searchTerm)
+            axios.get('/api/ukms/'+this.desa_id, {params: this.serverParams})
             .then(response => {
                 this.loading = false;
                 this.totalRecords = response.data.total;
+                // this.totalRecords = response.totalRecords;
                 this.rows = response.data.data;
+                // this.rows = response.rows;
                 console.log(response.data);
             })
             .catch(err => {
                 console.log(err);
             })
         },
-
-        // getDataUkmDesa(){
-        //     axios.get('/api/ukms/' + this.desa_id)
-        //     .then(res => {
-        //         this.loading = false;
-        //         this.pagination = res.data.meta;
-        //         this.dataUkmDesa = res.data;
-        //         console.log(res.data);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     })
-        // },
 
         // dateFormat(date) {
         //     return moment(new Date(date)).format('DD/MM/YYYY');

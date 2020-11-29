@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // =============== MEMBER AREA==================================
 Route::post('add-product', 'Api\ProductController@addProduct');
-Route::get('ukms/{desa_id}', 'UkmDesaController@getRecords');
+Route::get('ukms/{desa_id}', 'UkmDesaController@index');
 // Route::post('update-product/{id}', 'Api\ProductController@updateProduct');
 // Route::post('update-company-info/{id}', 'Api\CompanyController@updateCompanyProfile');
 // ================END MEMBER ==================================
